@@ -1,0 +1,8 @@
+﻿<Project>
+
+    <PropertyGroup>
+        <StyleCop_Analyzers_Version>1.1.1-rc.114</StyleCop_Analyzers_Version>
+        <JetBrains_Annotations_Version>2020.1.0</JetBrains_Annotations_Version>
+    </PropertyGroup>
+
+</Project>

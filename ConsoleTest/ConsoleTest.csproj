@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <CodeAnalysisRuleSet>../stylecop.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="$(JetBrains_Annotations_Version)" />
+        <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCop_Analyzers_Version)" />
+        <AdditionalFiles Include="../stylecop.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AvGen\AvGen.csproj" />
+    </ItemGroup>
+    
+</Project>
