@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 namespace AvGen
 {
-    public class AvGenerator
+    public abstract class AvGeneratorBase
     {
         public int Width { get; }
 
@@ -13,18 +13,12 @@ namespace AvGen
 
         public Color Background { get; }
 
-        public HashType HashType { get; }
-
-        public AvGenerator(int width = 600, int widthInBlocks = 5, int margin = 50, HashType hashType = HashType.Sha512)
-            : this(Color.WhiteSmoke, width, widthInBlocks, margin, hashType)
+        protected AvGeneratorBase()
+            : this(Color.WhiteSmoke, 600, 5, 50)
         {
         }
 
-        public AvGenerator(Color background,
-                           int width = 600,
-                           int widthInBlocks = 5,
-                           int margin = 50,
-                           HashType hashType = HashType.Sha512)
+        protected AvGeneratorBase(Color background, int width, int widthInBlocks, int margin)
         {
             if (width <= 0)
                 throw new ArgumentException("Must be greater than 0.", nameof(width));
@@ -44,40 +38,19 @@ namespace AvGen
             Width = width;
             WidthInBlocks = widthInBlocks;
             Margin = margin;
-            HashType = hashType;
             Background = background;
         }
 
         public Bitmap Generate(string source) => CreateBitmap(GenerateTemplate(source));
 
-        public AvTemplate GenerateTemplate(string source)
-        {
-            var hash = Hasher.ComputeHash(HashType, source);
-            var template = new bool[WidthInBlocks, WidthInBlocks];
-            var height = WidthInBlocks;
-            var width = (WidthInBlocks / 2) + (WidthInBlocks % 2);
-
-            for (var i = 0; i < height; i++)
-            {
-                for (var j = 0; j < width; j++)
-                {
-                    if (hash[hash.Length - i - j - 1] > 127)
-                        continue;
-
-                    template[i, j] = true;
-                    template[i, WidthInBlocks - j - 1] = true;
-                }
-            }
-
-            return new AvTemplate { Color = Color.FromArgb(hash[0], hash[1], hash[2]), Template = template };
-        }
+        public abstract AvTemplate GenerateTemplate(string source);
 
         public Bitmap CreateBitmap(AvTemplate template)
         {
             var bitmap = new Bitmap(Width, Width);
             var leftMargin = Margin;
             var rightMargin = Width - Margin;
-            var blockWidth = (Width - (2 * Margin)) / WidthInBlocks;
+            var blockWidth = (Width - (2 * Margin)) / (double)WidthInBlocks;
 
             for (var i = 0; i < Width; i++)
             {
@@ -89,7 +62,9 @@ namespace AvGen
                         continue;
                     }
 
-                    var pixel = template[(i - Margin) / blockWidth, (j - Margin) / blockWidth] ? template.Color : Background;
+                    var pixel = template[(int)((i - Margin) / blockWidth), (int)((j - Margin) / blockWidth)]
+                        ? template.Color
+                        : Background;
                     bitmap.SetPixel(j, i, pixel);
                 }
             }

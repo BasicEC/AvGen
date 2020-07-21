@@ -10,6 +10,8 @@ namespace AvGen
     /// </summary>
     public static class Hasher
     {
+        private const string UnknownHashTypeMessage = "Unknown hash type.";
+
         public static SHA1 Sha1 => LazySha1.Value;
 
         public static SHA256 Sha256 => LazySha256.Value;
@@ -35,10 +37,19 @@ namespace AvGen
                 HashType.Sha256 => Sha256,
                 HashType.Sha384 => Sha384,
                 HashType.Sha512 => Sha512,
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unknown type of hash.")
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, UnknownHashTypeMessage)
             };
 
             return algorithm.ComputeHash(buffer);
         }
+
+        public static int GetLength(HashType type) => type switch
+        {
+            HashType.Sha1 => 20,
+            HashType.Sha256 => 32,
+            HashType.Sha384 => 48,
+            HashType.Sha512 => 64,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, UnknownHashTypeMessage)
+        };
     }
 }
