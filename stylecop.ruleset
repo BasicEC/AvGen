@@ -8,7 +8,11 @@
         <Rule Id="SA1518" Action="Error" />
         <!-- Disabled rules -->
         <Rule Id="SA0001" Action="None" />
+        <Rule Id="SA1101" Action="None" />
+        <Rule Id="SA1116" Action="None" />
         <Rule Id="SA1200" Action="None" />
+        <Rule Id="SA1201" Action="None" />
+        <Rule Id="SA1503" Action="None" />
         <Rule Id="SA1600" Action="None" />
         <Rule Id="SA1602" Action="None" />
         <Rule Id="SA1633" Action="None" />
